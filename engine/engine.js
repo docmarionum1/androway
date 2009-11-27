@@ -14,4 +14,7 @@
 includeJS("engine/graphics/core.graphics.texture.js");
 includeJS("engine/graphics/core.graphics.texturemanager.js");
 
+TextureManager.ctx = document.getElementById("canvas").getContext("2d");
 
+TextureManager.addTexture("media/images/textures/link.gif");
+TextureManager.drawTexture(0, 10, 10);
