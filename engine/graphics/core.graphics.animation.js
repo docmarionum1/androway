@@ -1,5 +1,5 @@
 /**
- * Engine::Core::Graphics::TextureManager
+ * Engine::Core::Graphics::Animation
  * 
  * LICENSE
  * 
