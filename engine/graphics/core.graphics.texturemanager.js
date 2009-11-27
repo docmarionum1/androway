@@ -17,12 +17,17 @@
  * @author      DaveC <admin@excurion.nl>
  * @version     0.1 2009-11-27
  */
-function TextureManager(){
+var TextureManager = new function(){
     /**
      * All the current textures
      * @var array
      */
     this.Textures = new Array();
+    /**
+     * The canvas to draw on
+     * @var object
+     */
+    this.ctx;
     
     /**
      * Adds a texture to the texture-array
@@ -82,7 +87,7 @@ function TextureManager(){
      */
     this.drawTexture = function(id, x, y){
         if(this.Textures[id].imageLoaded === true){
-            drawImage(this.Textures[id].image, x, y);
+            this.ctx.drawImage(this.Textures[id].image, x, y);
             
             this.Textures[id].x = x;
             this.Textures[id].y = y;
@@ -123,7 +128,7 @@ function TextureManager(){
     this.drawAllTextures = function(){
         for(var i = 0; i < this.Textures.length; i++){
             if(this.Textures[i].imageLoaded === true && this.Textures[i].drawReady === true){
-                drawImage(this.Textures[i].image, this.Textures[i].x, this.Textures[i].y);
+                this.ctx.drawImage(this.Textures[i].image, this.Textures[i].x, this.Textures[i].y);
             }
         }
     }
