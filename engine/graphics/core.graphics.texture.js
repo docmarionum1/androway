@@ -17,7 +17,7 @@
  * @author      DaveC <admin@excurion.nl>
  * @version     0.1 2009-11-27
  */
-function Textures(id, src){
+function Texture(id, src){
     /**
      * The identifier, unique for each texture
      * @var int
@@ -39,6 +39,34 @@ function Textures(id, src){
      * @var bool
      */
     this.imageLoaded = false;
+    /**
+     * The x-coordinate of the texture
+     * @var int
+     */
+    this.x = 0;
+    /**
+     * The y-coordinate of the texture
+     * @var int
+     */
+    this.y = 0;
+    
+    /**
+     * The width of the texture
+     * @var int
+     */
+    this.width = 0;
+    
+    /**
+     * The height of the texture
+     * @var int
+     */
+    this.height = 0;
+    
+    /**
+     * A flag that tells if the texture is draw-ready
+     * @var bool
+     */
+    this.drawReady = false;
     
     /**
      * Load the image from its source into the image object
@@ -52,6 +80,9 @@ function Textures(id, src){
             
             this.image.onload = function(){
                 this.imageLoaded = true;
+                
+                this.width = this.image.width;
+                this.height = this.image.height;
             }
         }
         else{
@@ -59,6 +90,9 @@ function Textures(id, src){
             
             this.image.onload = function(){
                 this.imageLoaded = true;
+                
+                this.width = this.image.width;
+                this.height = this.image.height;
             }
             
             this.image.src = this.src;
