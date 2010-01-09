@@ -1,0 +1,44 @@
+File-naming:
+
+Filenames should be caps free, unless the name of the thing it contains
+contains a capital letter (Like jQuery). Multiple words in the filename are
+delimeted with a dot.
+
+Comments:
+// Normal descriptive comments
+// Are like this, and can span
+// multiple lines.
+
+/**
+ * FunctionName(argumentNum1, argumentNum2)
+ * 
+ * Functions are described like this. Where
+ * this gets replaced by the description of the
+ * function itself.
+ * 
+ * @param	int		argumentNum1		-	Description
+ * @param	string		argumentNum2		-	Description
+ * @return	bool					-	Description
+ */
+
+/**
+ * @var		int		howOldAmI		-	Description
+ */
+
+/**
+ * ClassName
+ *
+ * Class Description is placed here
+ * 
+ * @function	private		FunctionName1		-	Description
+ * @function	public		FunctionName2		-	Description
+ * @variable	private		privateVariable		-	Description
+ * @variable	public		publicVariable		-	Description
+ */
+
+Function/Class/Variables:
+class ClassName{
+	private function FunctionName(argumentNum1, argumentNum2){
+		this.variableName = argumentNum1;
+	}
+}
