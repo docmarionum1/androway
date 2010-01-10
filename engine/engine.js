@@ -108,7 +108,7 @@ var Engine = new Class({
             return true;
         }
         if(this.settings.useGears){
-            //Create communications worker
+            //Create Communications worker
             this.threads.comm.thread = new CommunicationsHandler();
             
             this.threads.comm.thread.onmessage = function(message){
