@@ -70,8 +70,8 @@ var Engine = new Class({
     },
     CreateThreads: function(){
         if(this.settings.useWorkers){
-            //Create communications thread
-            this.threads.comm.thread = new Worker("engine/engine.comm.js");
+            //Create Communications thread
+            this.threads.comm.thread = new CommunicationsHandler();
             
             this.threads.comm.thread.onmessage = function(message){
                 
@@ -109,13 +109,11 @@ var Engine = new Class({
         }
         if(this.settings.useGears){
             //Create communications worker
-            this.threads.comm.thread = google.gears.factory.create('beta.workerpool');
+            this.threads.comm.thread = new CommunicationsHandler();
             
             this.threads.comm.thread.onmessage = function(message){
                 
             }
-            
-            this.threads.comm.id = this.threads.comm.thread.createWorkerFromUrl("engine/engine.comm.js");
             
             //Create Artificial Intelligence thread
             this.threads.AI.thread = google.gears.factory.create('beta.workerpool');
