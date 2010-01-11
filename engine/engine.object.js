@@ -12,7 +12,7 @@
 * @function     public      Rotate      Rotates the object around it's center
 */
 
-var Object = new Class({
+var GObject = new Class({
     corners: null,
     center: null,
     size: {
@@ -26,11 +26,11 @@ var Object = new Class({
         left: 0,
         right: 0
     },
-    rotation: 0
+    rotation: 0,
     initialize: function(x, y, w, h, sx, sy, r){
         this.size.width = w;
         this.size.height = h;
-        this.center = new Vector2((x + w/2), (y + h/2));
+        this.center = new Vector2((x + (w/2)), (y + (h/2)));
         this.corners = new Array(new Vector2(x,y), new Vector2(x + w, y), new Vector2(x + w, y + h), new Vector2(x, y + h));
         this.speed = new Vector2(sx, sy);
         this.boundingBox.top = y;
@@ -43,7 +43,7 @@ var Object = new Class({
         if ((this.rotation % 360) != 0){
             var tempTop = this.center.y;
             var tempBottom = this.center.y;
-            var tempRight = this.enter.x;
+            var tempRight = this.center.x;
             var tempLeft = this.center.x;
             
             for (var i = 0; i < 4; i++){
@@ -63,11 +63,11 @@ var Object = new Class({
             this.boundingBox.left = tempLeft;
         }
         
-        this.boundingBox.top = corners[0].y;
-        this.boundingBox.bottom = corners[0].y + size.height;
-        this.boundingBox.left = corners[0].x;
-        this.boundingBox.right = corners[0].x + size.width;
-    }
+        this.boundingBox.top = this.corners[0].y;
+        this.boundingBox.bottom = this.corners[0].y + this.size.height;
+        this.boundingBox.left = this.corners[0].x;
+        this.boundingBox.right = this.corners[0].x + this.size.width;
+    },
     MovePos: function(x, y){
         for (var i = 0; i < 4; i++){
             this.corners[i].x += x;
@@ -100,6 +100,34 @@ var Object = new Class({
         }
 
         this.UpdateBoundingBox();
+    }
+});
+
+/**
+*
+* Visible Object
+*
+* @function     public      initialize      Create a visible object
+* @function     public      Draw        Draw the object to the canvas
+*/
+
+var VisibleObject = new Class({
+    Extends: GObject,
+    context: null,
+    sprites: null,
+    currentSprite: 0,
+    initialize: function(x, y, w, h, sx, sy, r, a, c){
+        this.parent(x, y, w, h, sx, sy, r);
+        this.context = c;
+        this.sprites = new Array(a.length);
+        a.each(function(item, index){ this.sprites[index] = new Element('img', { 'src' : item }); }, this);
+    },
+    Draw: function(){
+        this.context.save();
+        this.context.translate(this.center.x, this.center.y);
+        this.context.rotate((this.rotation * Math.PI/180));
+        this.context.drawImage(this.sprites[this.currentSprite], -this.size.width/2, -this.size.height/2);
+        this.context.restore();
     }
 });
 
