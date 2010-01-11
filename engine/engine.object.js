@@ -6,59 +6,81 @@
 *
 * @function     public      initialize      Creates an object with location and size
 * @function     public      UpdateBoundingBox       Updates the locations of the bounding box sides
-* @function     public      SetPos      Sets the object's position to the given coordinates
 * @function     public      MovePos     Moves the object from the current position to a new one by the given distances
+* @function     public      SetPos      Sets the object's position to the given coordinates
 * @function     public      Collide     Checks whether a given object is colliding with this object
+* @function     public      Rotate      Rotates the object around it's center
 */
 
 var Object = new Class({
-    location: {
-        x: 0,
-        y: 0
-    },
+    corners: null,
+    center: null,
     size: {
         width: 0,
         height: 0
     },
-    speed: {
-        x: 0,
-        y: 0
-    },
+    speed: null,
     boundingBox: {
         top: 0,
         bottom: 0,
         left: 0,
         right: 0
-    }
-    initialize: function(x, y, w, h, sx, sy){
-        this.location.x = x;
-        this.location.y = y;
+    },
+    rotation: 0
+    initialize: function(x, y, w, h, sx, sy, r){
         this.size.width = w;
         this.size.height = h;
-        this.speed.x = sx;
-        this.speed.y = sy;
+        this.center = new Vector2((x + w/2), (y + h/2));
+        this.corners = new Array(new Vector2(x,y), new Vector2(x + w, y), new Vector2(x + w, y + h), new Vector2(x, y + h));
+        this.speed = new Vector2(sx, sy);
         this.boundingBox.top = y;
         this.boundingBox.left = x;
         this.boundingBox.right = x + w;
         this.boundingBox.bottom = y + h;
+        this.rotation = r;
     },
     UpdateBoundingBox: function(){
-        this.boundingBox.top = location.y;
-        this.boundingBox.bottom = location.y + size.height;
-        this.boundingBox.left = location.x;
-        this.boundingBox.right = location.x + size.width;
+        if ((this.rotation % 360) != 0){
+            var tempTop = this.center.y;
+            var tempBottom = this.center.y;
+            var tempRight = this.enter.x;
+            var tempLeft = this.center.x;
+            
+            for (var i = 0; i < 4; i++){
+                if (this.corners[i].y < tempTop)
+                    tempTop = this.corners[i].y;
+                else if (this.corners[i].y > tempBottom)
+                    tempBottom = this.corners[i].y;
+                if (this.corners[i].x < tempLeft)
+                    tempLeft = this.corners[i].x;
+                else if (this.corners[i].x > tempRight)
+                    tempRight = this.corners[i].x;
+            }
+
+            this.boundingBox.top = tempTop;
+            this.boundingBox.bottom = tempBottom;
+            this.boundingBox.right = tempRight;
+            this.boundingBox.left = tempLeft;
+        }
+        
+        this.boundingBox.top = corners[0].y;
+        this.boundingBox.bottom = corners[0].y + size.height;
+        this.boundingBox.left = corners[0].x;
+        this.boundingBox.right = corners[0].x + size.width;
     }
-    SetPos: function(x, y){
-        this.location.x = x;
-        this.location.y = y;
+    MovePos: function(x, y){
+        for (var i = 0; i < 4; i++){
+            this.corners[i].x += x;
+            this.corners[i].y += y;
+        }
+        
+        this.center.x += x;
+        this.center.y += y;
         
         this.UpdateBoundingBox();
     },
-    MovePos: function(x, y){
-        this.location.x += x;
-        this.location.y += y;
-        
-        this.UpdateBoundingBox();
+    SetPos: function(x, y){
+        this.movePos(x - this.corners[0].x, y - this.corners[0].y);
     },
     Collide: function(o){
         if (o.boundingBox.bottom < this.boundingBox.top || o.boundingBox.top > this.boundingBox.bottom || o.boundingBox.right < this.boundingBox.left || o.boundingBox.left > this.boundingBox.right)
@@ -66,6 +88,18 @@ var Object = new Class({
         return true;
         
         //Only primiary rectangular collision is checked there, secondary detection with bubbles or pixels can also be implemented.
+    },
+    Rotate: function(r){
+        this.rotation += r;
+        var temp = new Vector2(0,0);
+        for (var i = 0; i < 4; i++){
+            temp.x = corners[i].x;
+            temp.y = corners[i].y;
+            this.corners[i].x = this.center.x + ((Math.cos(r * Math.PI/180) * (temp.x - this.center.x)) - (Math.sin(r * Math.PI/180) * (temp.y - this.center.y)));
+            this.corners[i].y = this.center.y + ((Math.cos(r * Math.PI/180) * (temp.y - this.center.y)) + (Math.sin(r * Math.PI/180) * (temp.x - this.center.x)));
+        }
+
+        this.UpdateBoundingBox();
     }
 });
 
