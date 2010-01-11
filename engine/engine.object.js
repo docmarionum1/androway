@@ -52,13 +52,13 @@ var Object = new Class({
         this.location.x = x;
         this.location.y = y;
         
-        UpdateBoundingBox();
+        this.UpdateBoundingBox();
     },
     MovePos: function(x, y){
         this.location.x += x;
         this.location.y += y;
         
-        UpdateBoundingBox();
+        this.UpdateBoundingBox();
     },
     Collide: function(o){
         if (o.boundingBox.bottom < this.boundingBox.top || o.boundingBox.top > this.boundingBox.bottom || o.boundingBox.right < this.boundingBox.left || o.boundingBox.left > this.boundingBox.right)
