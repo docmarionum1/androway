@@ -13,6 +13,12 @@ var Engine = new Class({
     useGears: false,
     useWorkers: false
   },
+    errors: {
+        lastError: {
+            message: null,
+            code: 0
+        }
+    }
   threads: {
     comm: {
       thread: null,
