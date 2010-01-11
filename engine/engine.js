@@ -7,6 +7,7 @@
  * @function	public		PickMultiThreadMethod	-	Picks wether Google Gears needs to be used, or Workers
  * @function	public		CreateThreads   		-	Creates the threads, and sets up communications
  * @function	public		InitCanvas		        -	Grabs the canvas element from the page and creates a 2d context.
+ * @function    public      Failed                  -   Returns false, and sets the last errormessage/code
  */
 var Engine = new Class({
     settings: {
@@ -39,12 +40,18 @@ var Engine = new Class({
         canvasElement: null,
         context: null
     },
+    errors: {
+        lastError: {
+            message: "",
+            code: 0
+        }
+    }
     initialize: function(){
-        if(!this.PickMultiThreadMethod()) return false;
+        if(!this.PickMultiThreadMethod()) return Failed("Unable to create threads", 0);
         
         this.CreateThreads();
 	    
-        if (!this.initCanvas()) return false;
+        if (!this.initCanvas()) return Failed("Unable to get the canvas", 1);
     },
     PickMultiThreadMethod: function(){
         if(Worker){
@@ -159,6 +166,12 @@ var Engine = new Class({
             this.canvas.context = this.canvas.canvasElement.getContext('2d');
             if(this.canvas.context) return true;
         }
+        return false;
+    }
+    Failed: function(message, code){
+        this.error.lastError.message = message;
+        this.error.lastError.code = code;
+        
         return false;
     }
 });
