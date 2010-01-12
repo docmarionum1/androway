@@ -1,0 +1,38 @@
+<head>
+    <script src="../lib/mootools/mootools.core.js"></script>
+    <script src="../engine/engine.vector2.js"></script>
+    <script src="../engine/engine.object.js"></script>   
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <small><a href="#" onclick="o.rotation = o.rotation + 5; return false;">Z</a> to rotate clockwise, <a href="#" onclick="o.rotation = o.rotation - 5; return false;">X</a> to rotate counter clockwise, <a href="#" onclick="o.MovePos(-5, 0); return false;">&lt;-</a> <a href="#" onclick="o.MovePos(0,-5); return false">/\</a> <a href="#" onclick="o.MovePos(5,0); return false;">-&gt;</a> <a href="#" onclick="o.MovePos(0,5); return false;">\/</a> to move.</small>
+    <script>
+        var canvasElement = $('canvas');
+        var context = canvasElement.getContext("2d");
+        var o = new VisibleObject(0, 0, 300, 300, 5, 5, 10, ["b.png"], context);
+        
+        document.onkeydown = a;
+        
+        function a(event) {
+            if (event.keyCode == 90)
+                o.rotation = o.rotation + 5;
+            if (event.keyCode == 88)
+                o.rotation = o.rotation - 5;
+            if (event.keyCode == 37)
+                o.MovePos(-5, 0);
+            if (event.keyCode == 38)
+                o.MovePos(0, -5);
+            if (event.keyCode == 39)
+                o.MovePos(5, 0);
+            if (event.keyCode == 40)
+                o.MovePos(0, 5);
+        }
+        function b(){
+            context.clearRect(0,0, 500, 500);
+            o.Draw();
+            setTimeout(b, 5);
+        }
+        
+        b();
+    </script>
+</body>
