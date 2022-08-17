@@ -1,0 +1,39 @@
+<head>
+    <script src="mootools-1.2.4-core-nc.js.txt"></script>
+    <script src="engine.vector2.js"></script>
+    <script src="engine.object.js"></script>   
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    Shift to rotate clockwise, ctrl to rotate counter clockwise, arrows to move.
+    <script>
+        var canvasElement = $('canvas');
+        var context = canvasElement.getContext("2d");
+        var o = new VisibleObject(0, 0, 300, 300, 5, 5, 10, ["s.png"], context);
+        
+        document.onkeydown = a;
+        
+        
+        function a(event) {
+            if (event.keyCode == 16)
+                o.rotation++;
+            if (event.keyCode == 17)
+                o.rotation--;
+            if (event.keyCode == 37)
+                o.MovePos(-1, 0);
+            if (event.keyCode == 38)
+                o.MovePos(0, -1);
+            if (event.keyCode == 39)
+                o.MovePos(1, 0);
+            if (event.keyCode == 40)
+                o.MovePos(0, 1);
+        }
+        function b(){
+            context.clearRect(0,0, 500, 500);
+            o.Draw();
+            setTimeout(b, 5);
+        }
+        
+        b();
+    </script>
+</body>

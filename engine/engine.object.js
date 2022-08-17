@@ -27,6 +27,7 @@ var GObject = new Class({
         right: 0
     },
     rotation: 0,
+    visible: false,
     initialize: function(x, y, w, h, sx, sy, r){
         this.size.width = w;
         this.size.height = h;
@@ -114,23 +115,39 @@ var GObject = new Class({
 var VisibleObject = new Class({
     Extends: GObject,
     context: null,
-    sprites: null,
-    currentSprite: 0,
-    initialize: function(x, y, w, h, sx, sy, r, a, c){
+    sprite: {
+        sheet: null,
+        current: null,
+        max: null
+    },
+    visible: true,
+    initialize: function(x, y, w, h, sx, sy, r, a, cs, m, c){
         this.parent(x, y, w, h, sx, sy, r);
         this.context = c;
-        this.sprites = new Array(a.length);
-        a.each(function(item, index){ this.sprites[index] = new Element('img', { 'src' : item }); }, this);
+        this.sprite.sheet = new Element('img', { 'src' : a });
+        this.sprite.current = cs;
+        this.sprite.max = m;
     },
     Draw: function(){
-        this.context.save();
-        this.context.translate(this.center.x, this.center.y);
-        this.context.rotate((this.rotation * Math.PI/180));
-        this.context.drawImage(this.sprites[this.currentSprite], -this.size.width/2, -this.size.height/2);
-        this.context.restore();
+        if (this.sprite.sheet.complete){
+            this.context.save();
+            if (arguments[0] || arguments[1])
+            {
+                this.context.translate(this.center.x + arguments[0], this.center.y + arguments[1]);
+                
+            }
+            else
+                this.context.translate(this.center.x, this.center.y);
+            this.context.rotate((this.rotation * Math.PI/180));
+            var f = (this.sprite.current.x * this.size.width);
+            var u = (this.sprite.current.y * this.size.height);
+            this.context.drawImage(this.sprite.sheet, f, u, this.size.width, this.size.height, -this.size.width/2, -this.size.height/2, this.size.width, this.size.height);
+            this.context.restore();
+        }
+    },
+    Animate: function(){
+        this.sprite.current.x++;
+        if (this.sprite.current.x > this.sprite.max.x)
+            this.sprite.current.x = 0;
     }
 });
-
-/*
-*To Do: Extend Object to a visible object which holds an array of images.
-*/
